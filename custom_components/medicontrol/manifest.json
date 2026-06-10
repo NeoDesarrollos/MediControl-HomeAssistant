@@ -1,0 +1,14 @@
+{
+  "domain": "medicontrol",
+  "name": "MediControl",
+  "version": "1.0.3",
+  "documentation": "https://github.com/NeoDesarrollos/MediControl-HomeAssistant",
+  "issue_tracker": "https://github.com/NeoDesarrollos/MediControl-HomeAssistant/issues",
+  "codeowners": [
+    "@NeoDesarrollos"
+  ],
+  "requirements": [],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "integration_type": "device"
+}

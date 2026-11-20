@@ -1,0 +1,73 @@
+# Adelantar la próxima toma desde el móvil con la app de Home Assistant.
+# 1. Sustituye TU_EQUIPO por el identificador de tu pastillero (ver README).
+# 2. Sustituye TU_MOVIL por el nombre de tu móvil en la app (notify.mobile_app_TU_MOVIL).
+# 3. Ajustes > Automatizaciones > Crear automatización > Editar en YAML, y pega cada una por separado.
+
+- alias: MediControl - aviso al pedir adelanto
+  description: Cuando se pide adelantar una toma, avisa al móvil con los botones Confirmar y Cancelar.
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: sensor.TU_EQUIPO_adelanto_de_toma
+      attribute: pendiente
+  conditions:
+    - condition: template
+      value_template: "{{ state_attr('sensor.TU_EQUIPO_adelanto_de_toma', 'pendiente') not in [None, ''] }}"
+  actions:
+    - action: notify.mobile_app_TU_MOVIL
+      data:
+        title: "MediControl: adelantar toma"
+        message: "¿Dispensar ahora la toma de las {{ state_attr('sensor.TU_EQUIPO_adelanto_de_toma', 'pendiente') }}? Tienes 2 minutos."
+        data:
+          tag: medicontrol_adelanto
+          actions:
+            - action: MC_ADELANTO_CONFIRMAR
+              title: Confirmar
+            - action: MC_ADELANTO_CANCELAR
+              title: Cancelar
+
+- alias: MediControl - respuesta al adelanto desde el móvil
+  description: Pulsa Confirmar o Cancelar en el pastillero según el botón elegido en el aviso.
+  mode: single
+  triggers:
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: MC_ADELANTO_CONFIRMAR
+      id: ok
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: MC_ADELANTO_CANCELAR
+      id: "no"
+  actions:
+    - action: button.press
+      target:
+        entity_id: >-
+          {{ 'button.TU_EQUIPO_confirmar_adelanto_de_toma' if trigger.id == 'ok'
+             else 'button.TU_EQUIPO_cancelar_adelanto_de_toma' }}
+
+- alias: MediControl - adelanto dispensado o anulado
+  description: Quita el aviso del móvil y confirma si la toma se dispensó.
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: sensor.TU_EQUIPO_adelanto_de_toma
+      attribute: pendiente
+      to: ""
+  actions:
+    - action: notify.mobile_app_TU_MOVIL
+      data:
+        message: clear_notification
+        data:
+          tag: medicontrol_adelanto
+    - if:
+        - condition: template
+          value_template: "{{ state_attr('sensor.TU_EQUIPO_adelanto_de_toma', 'adelantada') not in [None, ''] }}"
+      then:
+        - action: notify.mobile_app_TU_MOVIL
+          data:
+            title: MediControl
+            message: "Toma de las {{ state_attr('sensor.TU_EQUIPO_adelanto_de_toma', 'adelantada') }} dispensada. Recógela del pastillero."
+            data:
+              tag: medicontrol_adelanto_ok

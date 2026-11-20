@@ -1,0 +1,538 @@
+# Panel MediControl para Home Assistant
+# 1. Sustituye TU_EQUIPO por el identificador de tu pastillero (ver README).
+# 2. Requisitos de HACS (Frontend): button-card y card-mod.
+# 3. Ajustes > Paneles > Añadir panel > abre el panel > Editar > Editor de configuración en bruto,
+#    y pega esta vista dentro de "views:".
+title: MediControl
+path: MediControl
+type: sections
+icon: mdi:pill-multiple
+subview: false
+max_columns: 3
+sections:
+- type: grid
+  column_span: 1
+  cards:
+  - type: markdown
+    text_only: true
+    title: null
+    content: <center><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPCEtLSBDcmVhdG9yOiBDb3JlbERSQVcgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iOTYuOTkzN21tIiBoZWlnaHQ9IjEyLjQ4NDZtbSIgdmVyc2lvbj0iMS4xIiBzdHlsZT0ic2hhcGUtcmVuZGVyaW5nOmdlb21ldHJpY1ByZWNpc2lvbjsgdGV4dC1yZW5kZXJpbmc6Z2VvbWV0cmljUHJlY2lzaW9uOyBpbWFnZS1yZW5kZXJpbmc6b3B0aW1pemVRdWFsaXR5OyBmaWxsLXJ1bGU6ZXZlbm9kZDsgY2xpcC1ydWxlOmV2ZW5vZGQiCnZpZXdCb3g9IjAgMCAxNDE0Ni4xNCAxODIwLjgzIgogeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiCiB4bWxuczp4b2RtPSJodHRwOi8vd3d3LmNvcmVsLmNvbS9jb3JlbGRyYXcvb2RtLzIwMDMiPgogPGRlZnM+CiAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICAgPCFbQ0RBVEFbCiAgICAuZmlsMiB7ZmlsbDojMURBMTk5O2ZpbGwtcnVsZTpub256ZXJvfQogICAgLmZpbDAge2ZpbGw6IzIwQUNBMztmaWxsLXJ1bGU6bm9uemVyb30KICAgIC5maWwxIHtmaWxsOiNFMkU4RjA7ZmlsbC1ydWxlOm5vbnplcm99CiAgIF1dPgogIDwvc3R5bGU+CiA8L2RlZnM+CiA8ZyBpZD0iQ2FwYV94MDAyMF8xIj4KICA8bWV0YWRhdGEgaWQ9IkNvcmVsQ29ycElEXzBDb3JlbC1MYXllciIvPgogIDxwYXRoIGNsYXNzPSJmaWwwIiBkPSJNNjcwNi40NiAxMy4zYzI3My4xLC00OS40MyA1NjguNjcsNDEuMDMgNzY1Ljg4LDIzNi42NCAyMS4xMywyMi43NCA0OC4zMiw0NS4yMyA1Mi4wMiw3OC4yMiA4LjI4LDU3LjA4IC01MC4wNCwxMDguOTkgLTEwNi4wMiw5Ny44NiAtMzUuOTcsMC43NCAtNTcuMSwtMzIgLTgwLjcsLTUzLjYzIC0xMjguNSwtMTI0LjkzIC0zMDguNDIsLTE5My4zOCAtNDg3LjM2LC0xODkuOTIgLTE2Mi43MywwLjYxIC0zMjAuOSw2Ni45NyAtNDQzLjQ5LDE3Mi4wMSAtMTM4LjI2LDExNy4xNCAtMjI2LjYyLDI4OC4xNiAtMjQ5LjI0LDQ2Ny4zMyAtMi4zMyw0Mi4zOCAtNTMsNDQuMzUgLTg1LjAxLDQzIC0zMi4zNiwtMy4yMSAtNzIuMDMsNC4wOCAtOTYuMjYsLTIyLjM2IDAuMzgsLTE0NS4yIDU0LjUsLTI4NS44MSAxMjYuNjcsLTQxMC4xMyAxMjkuOTksLTIxNi4yNSAzNTMuNzgsLTM3Ni4wMiA2MDMuNSwtNDE5LjAyem0xMTA3LjMxIDk2OS41MWM1NC45OCwtMjMyLjU1IDI1Ni40LC00MjguNzcgNDk1LjYzLC00NjAuNzkgMzMuMjQsLTEwLjI1IDY3Ljg1LDE4LjI5IDY4LjU4LDUyLjAyIDYuNDMsNDIuMjcgMS40OSwxMDUuNTMgLTQ5LjQzLDExNi42NSAtMTA4LDIyLjYyIC0yMDguMzMsODQuNCAtMjcwLjk4LDE3NS45NiAtMTAxLjU3LDEzOC42NCAtMTEyLjIsMzM2LjQ4IC0zMC4xNSw0ODYuODYgMjIuMjQsMzUuODMgNDYuODMsNzAuMzEgNzUuODcsMTAxLjIgLTQzLjUxLDQzLjI0IC05OS45Niw2Ny44MyAtMTU3LjY3LDg1Ljg3IC0yOS42NSwtMzYuNDUgLTU2Ljk3LC03NC43NSAtNzkuODIsLTExNS43NyAtNjcuMjIsLTEzNi4wNiAtODcuOTksLTI5NC4xIC01Mi4wMiwtNDQyLjAyem02NTkuODUgLTQ1NC4xMWMyNy42OCwtMTcuNzkgNjMuMDIsLTEuOTggOTMuMDUsMi4xIDE4MC4wMyw0MC4xNyAzMzUuMjQsMTcwLjE2IDQxMC44NiwzMzcuNzEgNzcuMzYsMTU3LjU2IDc4Ljk2LDM0OC40NyA5LjE0LDUwOS4xIC03My41MiwxODkuNTYgLTI1NS40MiwzMjguNjkgLTQ1NS4xLDM1OS43MSAtMjguMDYsNi45MSAtNjEuMDUsMy43IC03Ni45OSwtMjMuNDggLTE2LjU1LC00My4xMyAtMTcuMywtMTExLjA5IDI3LjQzLC0xMzcuNzggNzYuNjEsLTE3LjMgMTUzLjQ3LC00Mi43NiAyMTQuMzksLTk0LjUyIDE4My44NywtMTQ1LjMyIDIxNi40OSwtNDQwLjUzIDcyLjAzLC02MjQuNCAtNjIuMzksLTg1LjUxIC0xNTcuMjksLTE0NS4wNyAtMjYxLjU5LC0xNjMuNDggLTMwLjY0LC0yLjczIC01Ni4zNCwtMjUuMzMgLTU5LjY4LC01Ni40NyAtNC4wOCwtMzYuODMgLTkuMzksLTg0LjkgMjYuNDQsLTEwOC40OXptNTU2MC43IC00MjguNTRjNTYuMjIsLTE3Ljc5IDExNy42NCwzMi44NyAxMTEuMDksOTEuNTYgMC44Niw0ODIuMDUgLTAuNSw5NjQuMiAwLjEyLDE0NDYuMjUgNi40Myw1MS41MyAtMzguOTMsMTAxLjA3IC05MS4wNyw5Ny4zNyAtNTEuMDMsMS43NCAtOTUuMDIsLTQ2LjU4IC04OS4zNSwtOTcuMTIgMC4yNSwtNDgyLjA1IDEuMjQsLTk2My45NyAtMC4xMiwtMTQ0NS44NyAtNC43LC00My4xMyAyOS4wNCwtODEuNTYgNjkuMzIsLTkyLjE5em0tMTg2NS4wMiA0MzIuNDljNTQuNzQsLTkuNzYgMTExLjU5LC0xNy4wNSAxNjYuODIsLTYuOCA1OC4wOCwxNC45NSA3OS41Nyw5NC40MSAzOS4yOSwxMzcuNzggLTIxLjEzLDI2LjU2IC01Ni43MiwyOS43OCAtODguMTEsMjguNzkgLTEwNi4wMiwtMy4yMSAtMjEwLjE4LDQzLjM3IC0yODQuMiwxMTcuODkgLTc2LjM4LDc4LjU4IC0xMTQuOCwxODguNDMgLTExNi45LDI5Ni45MyAwLjYxLDE3Ni43MSAtMC44OCwzNTMuNDEgMCw1MzAuMjQgNi4xNyw1MS41MyAtNDEuNzcsMTAwLjIxIC05My4wNSw5Ny4zNyAtNTAuMDUsMC41IC05My4xOCwtNDYuNDUgLTg3Ljc0LC05Ni41MSAtMC42MSwtMTg1LjM2IC0xLjQ5LC0zNzAuNyAwLjk5LC01NTUuOTQgOC4wNCwtMjU4LjUgMjAzLjAyLC01MDcuMjQgNDYyLjg5LC01NDkuNzV6bS0yMzc0Ljk3IC0zLjdjMTMxLjEsLTIyLjI0IDI3MC45OCwtMTEuOTkgMzkxLjk1LDQ2LjQ3IDIwOC45NSw5My40MSAzNTQuMzksMzE0LjIzIDM1Ni4xMyw1NDMuMzIgMC4xMiwxNzcuMzIgMS4yNCwzNTQuNjQgMCw1MzIuMDkgMi4xLDQxLjI3IC0zMS4zOSw3OC45NiAtNzIuMTYsODMuNjYgLTUwLjkxLDExIC0xMDYuMTUsLTMxLjc3IC0xMDQuMDUsLTg0LjY1IC0wLjg2LC0xNzcuMDcgMC45OSwtMzU0LjE0IC0wLjk4LC01MzEuMSAtMi44NiwtMTQwLjM4IC03OC4zNSwtMjc3LjUzIC0xOTUuNjIsLTM1NC43NiAtMTYyLjYsLTExNi4wNCAtNDAyLjgzLC05OC4zNiAtNTQ5Ljg3LDM1LjQ2IC02MS4wNSw1MC45MSAtOTguODUsMTIzLjIgLTEyNS41NCwxOTYuNiAtMjcuMzIsNzQuODggLTE5LjQxLDE1NS40NCAtMjAuMTQsMjMzLjU0IC0wLjk5LDE0MC4yNSAwLjYxLDI4MC42MiAtMC45OSw0MjEgMC44NiwzMi44NyAtMjEuNjMsNjIuNTIgLTUwLjU0LDc2LjIzIC01My44OCwyNi44MiAtMTMwLjAxLC0xNC4yMSAtMTI3Ljc4LC03Ni44NSAtMi4xLC0xNjguOCAtMC42MSwtMzM3LjU5IC0xLjExLC01MDYuMzkgLTUuNDQsLTE0Ni40MyA0OS4xOCwtMjkyLjQ4IDE0Mi40OCwtNDA0LjQzIDg4LjQ3LC0xMTAuNzMgMjE5LjgyLC0xODMuMzkgMzU4LjIzLC0yMTAuMTl6bTMxOTEuMDIgLTYuMDVjMjE2LjQ4LC0zMS43NyA0NTEuNzYsNTAuMTcgNTgzLjg1LDIyOC42IDE2MS44NywyMDAuNDIgMTc2LjA5LDUwMy41MyAzNC45Nyw3MTguOTIgLTkxLjgxLDE0OC40MSAtMjUzLjkzLDI0Ny43NSAtNDI2LjgsMjY2Ljc4IC0xNDUuMzIsMTQuODMgLTMwMC43NiwtMC41IC00MjYuMTksLTgwLjkzIC0xOTkuMTgsLTExOC41MSAtMzEwLjUyLC0zNTguOTcgLTI4NS4zMiwtNTg3LjU3IDIyLjEyLC0yNzEuMTEgMjQ4LjAxLC01MTIuOTQgNTE5LjQ5LC01NDUuOHptMjEuODYgMTY3LjY4Yy0xODIuNzYsMjcuNjggLTMzNS4zNiwxODMuMjYgLTM2MC42OSwzNjYuMTMgLTM2LjIsMTk2LjEgNzAuNjgsNDE5LjI2IDI2My4xOSw0ODguNDcgMTgxLjI5LDc3LjM2IDQxMC4yNSwxOC4wNCA1MjcuMTUsLTE0MS42MiA4OC40OCwtMTIyLjk1IDExMC40OCwtMjg5LjE0IDU3LjEsLTQzMC44NyAtNjYuMTEsLTE5NS4yNCAtMjg0LjM0LC0zMjEuNCAtNDg2Ljc1LC0yODIuMTF6bS0yMTM1LjAxIC01MDUuNzZjNDMuOTksLTUzLjc2IDE1MS4xMywtMzAuMTUgMTU2LjE5LDQzLjQ5IDEuNzQsOTcuNzUgMC45OSwxOTUuNDkgMS42LDI5My4zNSAxMDYuMDMsMS42IDIxMi4wNSwwLjUgMzE4LjA4LDEuMzYgNDcuMzMsLTIuMzUgODYuOTgsNDMuMjYgODQuMzksODkuMjEgMS4xMiw0My44NyAtMzkuOSw4NC40IC04NC4xNCw4MC40NSAtMTA2LjE1LC0wLjUgLTIxMi4yOSwtMC45OSAtMzE4LjMyLC0wLjg2IC0xLjcyLDIwOC40NiAtMC4yMyw0MTYuOTIgLTAuNSw2MjUuMjYgMC4yNiw4Mi4xNyAzMS43NywxNzAuNjQgMTAzLjkzLDIxNi4xMSA1Mi4zOSwzNS4wOSAxMTYuNzYsMzYuMzMgMTc3LjY4LDM1LjU5IDY2LjQ5LC00LjU2IDEwOS43Myw4Ni4wMSA2Ni4zNiwxMzYuMDUgLTIyLjQ5LDM0Ljk3IC02Ny4zNCwzMS4xNCAtMTAzLjMsMzEuNjMgLTExNi45LDMuNDcgLTI0MC4zNCwtMzUuMjEgLTMyMC4xNiwtMTIzLjkzIC03My4xNiwtNzkuNDYgLTEwMy4xOSwtMTg5LjggLTEwNS4xNSwtMjk1LjgzIDAuOTgsLTMzNy44NCAwLjEyLC02NzUuNzkgMC41LC0xMDEzLjYzIDAuOTgsLTM5Ljc5IC04LjQyLC04NyAyMi44NSwtMTE4LjI1em0tMzU0Ni4yOSAxMjczLjc1YzI4LjE4LC0yNS40NiA1MS4wMywtNjMuNTIgOTIuNDQsLTY3LjYgNjkuMDcsLTEyLjYgMTM5LjI1LDc5LjIxIDg5LjQ2LDEzNy45IC0xMTcuMjcsMTQ1LjgyIC0yOTIuMTEsMjM5LjYxIC00NzQuMjYsMjc1LjU2IC0yNjkuOTksNTQuMTIgLTU1OS44OSwtMjguMTYgLTc2NS4yNSwtMjEwLjMxIC00OC4xOSwtNDYuMjIgLTkzLjc5LC05NS4wMiAtMTMyLjg0LC0xNDkuMjcgLTMxLjM5LC00MyAtNTYuNzIsLTg5LjgzIC04MC4wNywtMTM3LjQgLTE3LjY4LC00MC45MSAtMzMuMTIsLTgyLjU1IC00Ny43MSwtMTI0LjU1IC0xNi4wNiwtNTcuOTYgLTI4LjA1LC0xMTcuMDMgLTMxLjYzLC0xNzcuMmwtNC4yIC0wLjc0YzMuNDYsLTIxLjM4IC0zLjIxLC01Ni4wOSAyNi4wOCwtNjEuMTcgNTEuODksLTYuNTUgMTA5Ljg1LC0xMy40NiAxNTUuMTksMTguOTIgNC4yMSw1MS4wMiAxMi4yNCwxMDEuNjggMjUuMSwxNTEuMzYgNS40MywxNy45MiAxMS4xMSwzNS45NyAxNi44LDU0LjAxIDE5Ljc2LDU0LjQ5IDQ3LjA4LDEwNS45IDc3LjcyLDE1NS4wOCAyNS43LDM1LjU5IDU0LjYyLDY4Ljk0IDg0LjY1LDEwMS4wNyA5Mi40Miw5NS40IDIxMS4zLDE2Mi44NyAzMzkuOTQsMTk1LjQ5IDIxOC45Niw1MS4yOCA0NjQuMTEsLTQuOTQgNjI4LjU4LC0xNjEuMTN6Ii8+CiAgPHBhdGggY2xhc3M9ImZpbDEiIGQ9Ik00OTI3LjMzIDkyLjM4YzAuOTksLTcxLjc5IDEwMy4wNSwtMTA1LjkgMTUxLjEzLC01NS43MyAyNy4zLDIzLjIzIDI2LjgyLDYxLjU1IDI2LjY5LDk0LjQxIDAsMjk2LjMyIC0wLjUsNTkyLjYzIDAuNjEsODg5LjA4IC0zLjU3LDEwNC4wNSA4LjI4LDIwOS45NSAtMTguMjcsMzExLjg5IC00MC42NiwxNzEuNTEgLTE2OC4wNiwzMjIuMDEgLTMzNi40OCwzNzguNDggLTEyMy42OSw0NC4zNyAtMjU2LjQxLDIyLjg3IC0zODQuNjcsMjguNDMgLTIyMS4wNiwxMSAtNDM0LjM0LC0xMzUuNDMgLTUxMi40NCwtMzQwLjggLTc0Ljc2LC0xODUuNDkgLTY0LjQ5LC00MDcuNTQgMzguODEsLTU4MC4yOCA5Ny4yNCwtMTY4LjU1IDI5MC4wMSwtMjgyLjcyIDQ4Ni4zNSwtMjcwLjc1IDU3LjcxLDI4Ljc5IDYwLjkyLDEyNS4zIDkuNzcsMTYyLjc1IC0yNy4xOSw5LjAxIC01Ni40Nyw3LjQxIC04NC4yNywxMy4zNCAtMTExLjQ3LDE4LjE2IC0yMDkuODMsOTMuMDQgLTI2NC4wNywxOTEuMTYgLTYwLjMxLDExMi41NiAtNjguOTYsMjQ3Ljc1IC0zOC45MywzNzAuNTggMjkuMjksMTE3LjUxIDExMy4zMSwyMjUuMDEgMjI5Ljg0LDI2NS4yOSA3MS4wNiwyNy4wNyAxNDguMDMsMTkuNzggMjIyLjQyLDIxLjAyIDkwLjIxLC0yLjIzIDE4Ni44NCwxMS4yNCAyNjkuMjYsLTM0Ljk3IDEyNS42OCwtNTguNTcgMjAwLjY3LC0xOTUuNDkgMjAzLjE1LC0zMzEuNDEgMS42LC0xNjIuNSAtMS4yNCwtMzI1LjEyIDAuNzQsLTQ4Ny42MSAtMTI5LjEzLC0wLjg2IC0yNTguMzgsMy43IC0zODcuNCwtMS4xMSAtODkuMzMsLTE3LjY4IC02Ny4yMiwtMTc5LjU1IDI0LjIzLC0xNzAuMjggMTIwLjczLDAuODYgMjQxLjQ1LC0wLjI1IDM2Mi4xOCwxLjg1IDIuNiwtMTUxLjc1IC0xLjI0LC0zMDMuNjEgMS4zNiwtNDU1LjM2em0tMjU1OC42MSAxMjA2LjAzYzM0Ljk3LC0xMSA3Ni43NCwtNC44MSAxMDMuMTksMjEuODggMjIuMjQsMjcuOCAzNi45NCw2MS4wNCA1OS44LDg4LjcyIDgwLjQ1LDk4LjYxIDIwMC41NSwxNjMuMzYgMzI2LjcyLDE3OC41NiAxNDQuMzMsMTYuMDcgMjk2LjQzLC0yNy42OCA0MDQuNDMsLTEyNi4yOSAzMy4yNSwtMzAuNTMgNjAuNDQsLTc5LjcgMTEyLjIsLTc2Ljg2IDY2LC01LjU2IDExOS43NCw3Ni41IDc4LjcxLDEzMS45OCAtMjA5LjMyLDI3Mi4yMiAtNjM2LjM3LDMyNy45NSAtOTE1Ljg4LDEzMy41OCAtODkuMjEsLTU3LjQ2IC0xNjAuNzcsLTEzOS4zOCAtMjEzLjc3LC0yMzAuNzEgLTI4LjQzLC00My4xMyAtMy45NSwtMTA1LjkgNDQuNiwtMTIwLjg1em0zMDkxLjU2IC0xMTk2LjY0YzUwLjQyLC0xOC4wNCAxMTEuOTUsMTQuMjIgMTI0LjgsNjYuMjQgNS4xOSwzMiA1LjgsNjUuMTIgMS43NCw5Ny4zNyAtMjYuMDgsNzcuOTcgLTE1NS41Nyw4My4yOCAtMTg4LjQ1LDguMTUgLTIxLC02MS40MiAtOC40LC0xNDguODkgNjEuOTEsLTE3MS43NnptMTE4Ljc1IDQ4Ni42MmM2LjA1LDMzNy4zNCAwLjYzLDY3NS4wNiAyLjYsMTAxMi41MiAwLjI1LDI0Ljk1IC0wLjg2LDQ5Ljc5IC0zLjM0LDc0LjYzIC0xNC40NSwyMi4zNyAtMzEuMDEsNDUuNDcgLTU3LjcsNTMuNjQgLTUyLjQsMjEuMzcgLTExOS4yNCwtMjEuODggLTExOS4xMywtNzguOTYgLTAuNzQsLTMxNy4wOCAwLjEzLC02MzQuMTUgMC4xMywtOTUxLjI0IDEuNiwtMzkuNzkgLTYuNjgsLTgxLjU2IDcuNzcsLTExOS42MSAyOS4yOSwtNzQuODkgMTQ1LjkzLC02NiAxNjkuNjYsOS4wMXptLTMyMTYuMTEgMTM1LjU2YzExNC44LC0xNTAuODggMjk1LjIxLC0yNTAuMzYgNDg0LjUxLC0yNjMuNyAxODguMDcsLTE5LjUzIDM4NC4wNCw0My4xMyA1MjMuMTgsMTcxLjg5IDExNS43OSwxMDMuNjcgMTg2LjIzLDI1Mi4wNyAyMDAuOTMsNDA2LjI4IC02MC4wNiwtMS4yNCAtMTIwLjEsLTIuMzUgLTE4MC4xNiwtMi4xIC0yMi45OSwtMTUyLjQ4IC0xMjMuNTgsLTI5My4xMSAtMjY1LjMxLC0zNTYuNjIgLTIwNS40OCwtOTYuMTMgLTQ3Mi42NCwtMzguNDMgLTYxMC45MiwxNDQuMjEgLTMzLjczLDM3LjU2IC00Mi42Myw5OS43MSAtOTUuNjUsMTE3LjI2IC01Ni4zNCwyMy43MyAtMTI2LjksLTE5LjI3IC0xMjYuMTYsLTgxLjgxIDYuNDMsLTUxLjUzIDM5LjY3LC05NC43NyA2OS41NywtMTM1LjQyem0tNTY5LjI4IC01OTcuOTVjNjEuMjgsLTY2LjIzIDE4NS4zNiwtMTIuMjQgMTc4LjkyLDc4LjIyIDAuMjUsNDc3Ljg0IC0wLjczLDk1NS44IDAuNSwxNDMzLjc3IDMuOTUsNDkuOTIgLTQwLjI4LDk3LjEyIC05MC4yMSw5Ni4zOCAtNTEuMjgsMi44NCAtOTkuNDcsLTQ0LjQ4IC05NC45LC05Ni4yNiAwLjUsLTQxMi40NyAwLjI1LC04MjUuMDcgLTAuOTgsLTEyMzcuNTMgLTE3OC42OSwxOTcuNTggLTM2MC41OCwzOTIuMDggLTUzOS44OCw1ODkuMTcgLTMyLjc0LDM5Ljc5IC0xMDIuNDQsMzYuNDUgLTEzNS42OCwtMS4yNCAtMzEuNSwtMzEuNSAtMzAuNTEsLTg4LjM1IDIuNDgsLTExOC4zNyAyMjYuNzUsLTI0OC4wMSA0NTEuMjYsLTQ5Ny44NiA2NzkuNzQsLTc0NC4xNHptLTE3OTAuMDEgNDMuNjJjMjIuODcsLTcxLjkyIDEyNC42OCwtOTcuOTkgMTc2LjgyLC00Mi41MSAyNzYuMzEsMzEyLjc1IDU1NS4xOSw2MjMuNCA4MzIuMzYsOTM1LjMgMjguNzksMzMuMjQgNzEuMTcsNjguNjkgNTkuNTYsMTE4LjEyIC0xMC42Myw3MC41NiAtMTEwLjg0LDkxLjY5IC0xNTUuNjksNDAuMTcgLTI0My41NiwtMjcwLjk4IC00ODkuMjEsLTU0MC4yNCAtNzMwLjc5LC04MTMuMDggMC4xMiw0MTAuNSAtMC4xMiw4MjEuMTEgMC4yNSwxMjMxLjczIDQuNTgsNTUuNjEgLTUxLjE2LDEwNi4wMiAtMTA2LjI2LDkzLjc5IC0zNS4xMSwtMy45NSAtNTkuODEsLTMxLjE0IC03Ni4zNiwtNjAuMTkgLTYuMTgsLTM0NS4xMiAtMC44OCwtNjkwLjYxIC0zLjIyLC0xMDM1Ljg3IDIuNiwtMTU1LjgyIC00LjA3LC0zMTEuODggMy4zNCwtNDY3LjQ1eiIvPgogIDxwYXRoIGNsYXNzPSJmaWwyIiBkPSJNMzM5MS4zOSAxMDM2LjMyYzYwLjA2LC0wLjI1IDEyMC4xLDAuODYgMTgwLjE2LDIuMSAwLjUsNDkuNDMgMTEuMzYsMTA3Ljg4IC0yOC4yOSwxNDYuMzEgLTMyLjc2LDM1LjQ2IC04NC41MywyMy4yMiAtMTI3LjI4LDI1LjIgLTI5NC4wOCwtNS45OSAtNTk0LjkxLC0zLjE1IC04ODkuNjksLTAuOTkgLTUxLjQxLDEuNiAtOTMuOTEsLTUzLjI1IC03OC40NywtMTAyLjU2IDkuNjMsLTQwLjI4IDQ3LjU3LC03My4xNiA5MC4zMiwtNjkuMiAyODUuMzMsLTMuMDUgNTY5LjgyLDQgODUzLjI0LC0wLjg2eiIvPgogPC9nPgo8L3N2Zz4K"
+      width="300" alt="MediControl"></center>
+    card_mod:
+      style: 'ha-card { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; padding: 8px 0 4px !important; }'
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_proxima_toma
+    - sensor.TU_EQUIPO_proximos_medicamentos
+    - sensor.TU_EQUIPO_horarios_y_medicamentos
+    custom_fields:
+      body: |-
+        [[[
+         const raw = states['sensor.TU_EQUIPO_horarios_y_medicamentos']?.state || '';
+         const lista = raw.split('|').map(t => t.trim()).filter(t => /^\d{2}:\d{2}/.test(t)).map(t => ({h: t.slice(0,5), m: t.slice(6).replace(/^:?\s*/,'')}));
+         const now = new Date(); const minNow = now.getHours()*60 + now.getMinutes();
+         const aMin = s => parseInt(s.slice(0,2))*60 + parseInt(s.slice(3,5));
+
+         const hora = states['sensor.TU_EQUIPO_proxima_toma']?.state || '--:--';
+         const meds = (states['sensor.TU_EQUIPO_proximos_medicamentos']?.state || '').split(',').map(x => x.trim()).filter(Boolean);
+         let falta = /^\d{2}:\d{2}$/.test(hora) ? (aMin(hora) - minNow + 1440) % 1440 : null;
+         const prev = lista.map(x => aMin(x.h)).filter(m => /^\d{2}:\d{2}$/.test(hora) && m !== aMin(hora));
+         let tramo = 1440;
+         if (prev.length && falta !== null) { const objetivo = aMin(hora); const ant = prev.map(m => (objetivo - m + 1440) % 1440).sort((a,b)=>a-b)[0]; tramo = ant || 1440; }
+         const pct = falta === null ? 0 : Math.max(0, Math.min(1, 1 - falta / tramo));
+         const r = 74, c = 2*Math.PI*r, off = c*(1-pct);
+         const txtFalta = falta === null ? 'Sin horario' : (falta >= 60 ? 'en ' + Math.floor(falta/60) + ' h ' + String(falta%60).padStart(2,'0') + ' min' : 'en ' + falta + ' min');
+         const chips = meds.map(m => '<span class="chip">' + m + '</span>').join('') || '<span class="mut">Sin medicamentos</span>';
+         return '<div class="eb">Próxima toma</div><div class="hero"><svg viewBox="0 0 170 170" class="ring"><circle cx="85" cy="85" r="'+r+'" class="tr"/><circle cx="85" cy="85" r="'+r+'" class="pr" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'"/></svg><div class="center"><div class="h">'+hora+'</div><div class="f">'+txtFalta+'</div></div></div><div class="chips">'+chips+'</div>';
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.hero{position:relative;width:190px;height:190px;margin:14px auto 6px}.ring{width:190px;height:190px;transform:rotate(-90deg)}.tr{fill:none;stroke:rgba(148,163,184,.14);stroke-width:10}.pr{fill:none;stroke:url(#g);stroke:#2dd4bf;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .6s}.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.h{font-size:46px;font-weight:800;color:#f8fafc;letter-spacing:-.02em;line-height:1}.f{font-size:13px;color:#5eead4;font-weight:700;margin-top:6px}.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}.chip{font-size:12px;font-weight:700;color:#ccfbf1;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.28);padding:5px 10px;border-radius:999px}
+    tap_action:
+      action: none
+    update_timer: 30000
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_adelanto_de_toma
+    custom_fields:
+      body: |-
+        [[[
+         const a = states['sensor.TU_EQUIPO_adelanto_de_toma']?.attributes || {};
+         const m = {ya_adelantada:'Ya hay una toma adelantada hoy',sin_toma_hoy:'No quedan tomas hoy',saltadas:'Hay tomas saltadas pendientes',sin_hora:'El equipo no tiene hora',motor:'El motor está girando',aviso:'Hay un aviso en pantalla',vacio:'Pastillero vacío',ota:'Actualizando',demo:'Modo demostración'};
+         let t, s, col;
+         if (a.pendiente) { t = 'Esperando confirmación'; s = 'Toma de las ' + a.pendiente + ' · 2 min para confirmar'; col = '#fbbf24'; }
+         else if (a.adelantada) { t = 'Toma adelantada'; s = 'La de las ' + a.adelantada + ' ya está dispensada'; col = '#4ade80'; }
+         else if (a.proxima_adelantable) { t = 'Puedes adelantar'; s = 'La toma de las ' + a.proxima_adelantable; col = '#38bdf8'; }
+         else { t = 'No disponible'; s = a.motivo ? (m[a.motivo] || a.motivo) : 'Sin datos'; col = '#64748b'; }
+         return '<div class="eb">Adelantar toma</div><div class="st"><span class="dotc" style="background:'+col+';box-shadow:0 0 0 5px '+col+'22"></span><div><div class="t">'+t+'</div><div class="s">'+s+'</div></div></div>';
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.st{display:flex;align-items:center;gap:14px;margin-top:12px}.dotc{width:12px;height:12px;border-radius:50%;flex:none}.t{font-size:17px;font-weight:800;color:#f1f5f9}.s{font-size:12px;color:#94a3b8;margin-top:2px}
+    tap_action:
+      action: none
+- type: grid
+  column_span: 1
+  cards:
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_horarios_y_medicamentos
+    - sensor.TU_EQUIPO_proxima_toma
+    - sensor.TU_EQUIPO_adelanto_de_toma
+    custom_fields:
+      body: |-
+        [[[
+         const raw = states['sensor.TU_EQUIPO_horarios_y_medicamentos']?.state || '';
+         const lista = raw.split('|').map(t => t.trim()).filter(t => /^\d{2}:\d{2}/.test(t)).map(t => ({h: t.slice(0,5), m: t.slice(6).replace(/^:?\s*/,'')}));
+         const now = new Date(); const minNow = now.getHours()*60 + now.getMinutes();
+         const aMin = s => parseInt(s.slice(0,2))*60 + parseInt(s.slice(3,5));
+
+         const sig = states['sensor.TU_EQUIPO_proxima_toma']?.state || '';
+         const adel = (states['sensor.TU_EQUIPO_adelanto_de_toma']?.attributes || {}).adelantada || '';
+         const items = lista.map(x => {
+           let est = 'pend', txt = 'Pendiente';
+           if (x.h === adel) { est = 'done'; txt = 'Adelantada'; }
+           else if (aMin(x.h) <= minNow) { est = 'done'; txt = 'Dispensada'; }
+           else if (x.h === sig) { est = 'next'; txt = 'Siguiente'; }
+           return '<div class="it '+est+'"><div class="tl"><span class="b"></span></div><div class="hh">'+x.h+'</div><div class="mm">'+x.m+'</div><span class="pill">'+txt+'</span></div>';
+         }).join('');
+         return '<div class="row"><div class="eb">Agenda de hoy</div><div class="mut sm">'+lista.length+' tomas</div></div><div class="list">'+(items || '<div class="mut">Sin horarios</div>')+'</div>';
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.sm{font-size:11px}.list{margin-top:14px;display:flex;flex-direction:column}.it{display:grid;grid-template-columns:14px 52px minmax(0,1fr) max-content;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(148,163,184,.10)}.it:last-child{border-bottom:0}.tl{display:flex;justify-content:center}.b{width:10px;height:10px;border-radius:50%;background:#475569}.hh{font-size:18px;font-weight:800;color:#e2e8f0;font-variant-numeric:tabular-nums}.mm{font-size:13px;color:#cbd5e1;line-height:1.3;white-space:normal;overflow-wrap:anywhere}.pill{font-size:10px;font-weight:800;padding:4px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;background:rgba(100,116,139,.18);color:#94a3b8}.done .b{background:#4ade80}.done .hh,.done .mm{color:#64748b}.done .pill{background:rgba(74,222,128,.12);color:#86efac}.next .b{background:#2dd4bf;box-shadow:0 0 0 5px rgba(45,212,191,.18)}.next .pill{background:rgba(45,212,191,.16);color:#5eead4}
+    tap_action:
+      action: none
+    update_timer: 60000
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_dias_restantes
+    - sensor.TU_EQUIPO_compartimentos_restantes
+    - sensor.TU_EQUIPO_compartimentos_maximos
+    - sensor.TU_EQUIPO_medicamentos_hasta
+    - sensor.TU_EQUIPO_ultimo_rellenado
+    custom_fields:
+      body: |-
+        [[[
+         const dias = states['sensor.TU_EQUIPO_dias_restantes']?.state || '--';
+         const rest = parseInt(states['sensor.TU_EQUIPO_compartimentos_restantes']?.state || 0);
+         const max = parseInt(states['sensor.TU_EQUIPO_compartimentos_maximos']?.state || 30) || 30;
+         const usados = Math.max(0, max - rest);
+         const hasta = states['sensor.TU_EQUIPO_medicamentos_hasta']?.state || '';
+         const rell = states['sensor.TU_EQUIPO_ultimo_rellenado']?.state || '';
+         const fmt = s => { const d = new Date(s.replace(' ', 'T')); return isNaN(d) ? '—' : d.toLocaleDateString('es-ES', {day:'numeric', month:'short'}); };
+         const n = parseInt(dias); const col = n <= 2 ? '#fb7185' : (n <= 5 ? '#fbbf24' : '#2dd4bf');
+         const R = 46;
+         const dots = Array.from({length: max}, (_, i) => {
+           const ang = (-90 + (i + 0.5) * 360 / max) * Math.PI / 180;
+           const x = 50 + R * Math.cos(ang), y = 50 + R * Math.sin(ang);
+           return '<i class="'+(i < usados ? 'u' : 'l')+'" style="left:'+x.toFixed(2)+'%;top:'+y.toFixed(2)+'%"></i>';
+         }).join('');
+         return '<div class="eb">Casilleros</div><div class="ruleta"><div class="sal"><span>Salida</span><b></b></div>'+dots+'<div class="mid"><div class="cnt"><b>'+rest+'</b>/'+max+'</div><div class="d" style="color:'+col+'">'+dias+'</div><div class="dl">días de medicación</div><div class="fx">Hasta '+fmt(hasta)+'</div><div class="fx mut">Rellenado '+fmt(rell)+'</div></div></div>';
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.ruleta{position:relative;width:250px;height:250px;margin:12px auto 4px}.ruleta i{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%}.ruleta .u{background:rgba(148,163,184,.14);box-shadow:inset 0 0 0 1px rgba(148,163,184,.2)}.ruleta .l{background:linear-gradient(145deg,#5eead4,#0d9488);box-shadow:0 0 0 1px rgba(45,212,191,.25),0 2px 6px rgba(13,148,136,.35)}.mid{position:absolute;inset:30px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle,rgba(45,212,191,.07),transparent 70%)}.ruleta{position:relative;width:250px;height:250px;margin:30px auto 4px}.sal{position:absolute;left:50%;top:-24px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;z-index:1}.sal span{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fbbf24;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);padding:2px 7px;border-radius:999px}.sal b{width:2px;height:22px;border-radius:2px;background:linear-gradient(#fbbf24,rgba(251,191,36,0))}.ruleta i{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%}.ruleta .u{background:rgba(148,163,184,.14);box-shadow:inset 0 0 0 1px rgba(148,163,184,.2)}.ruleta .l{background:linear-gradient(145deg,#5eead4,#0d9488);box-shadow:0 0 0 1px rgba(45,212,191,.25),0 2px 6px rgba(13,148,136,.35)}.mid{position:absolute;inset:30px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle,rgba(45,212,191,.07),transparent 70%)}.cnt{font-size:12px;color:#94a3b8;font-weight:700}.cnt b{font-size:16px;color:#f1f5f9;font-weight:800}.d{font-size:54px;font-weight:800;line-height:1;letter-spacing:-.03em;margin-top:2px}.dl{font-size:12px;color:#cbd5e1;font-weight:600;margin-top:2px}.fx{font-size:11px;color:#e2e8f0;font-weight:600;margin-top:6px}.fx+.fx{margin-top:2px}
+    tap_action:
+      action: none
+- type: grid
+  column_span: 1
+  cards:
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_tomas_saltadas
+    - sensor.TU_EQUIPO_actualizacion
+    - sensor.TU_EQUIPO_firmware
+    custom_fields:
+      body: |-
+        [[[
+         const n = parseInt(states['sensor.TU_EQUIPO_tomas_saltadas']?.state || 0);
+         const up = states['sensor.TU_EQUIPO_actualizacion']?.state || '';
+         const fw = states['sensor.TU_EQUIPO_firmware']?.state || '?';
+         const al = [];
+         if (n > 0) al.push(['r', 'mdi:pill-off', n + (n === 1 ? ' toma sin dispensar' : ' tomas sin dispensar'), 'Revisa la pantalla del pastillero']);
+         if (up && up !== 'Sin actualizaciones') al.push(['a', 'mdi:download', up, 'Firmware actual ' + fw]);
+         if (!al.length) return '<div class="eb">Avisos</div><div class="ok"><span class="okd"></span><div><div class="t">Todo en orden</div><div class="s">Sin tomas saltadas · firmware ' + fw + ' al día</div></div></div>';
+         return '<div class="eb">Avisos</div>' + al.map(x => '<div class="al '+x[0]+'"><ha-icon icon="'+x[1]+'"></ha-icon><div><div class="t">'+x[2]+'</div><div class="s">'+x[3]+'</div></div></div>').join('');
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.ok,.al{display:flex;align-items:center;gap:14px;margin-top:12px}.okd{width:12px;height:12px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 5px rgba(74,222,128,.15);flex:none}.t{font-size:16px;font-weight:800;color:#f1f5f9}.s{font-size:12px;color:#94a3b8;margin-top:2px}.al{padding:10px 12px;border-radius:14px}.al ha-icon{--mdc-icon-size:22px;flex:none}.al.r{background:rgba(251,113,133,.10);border:1px solid rgba(251,113,133,.3)}.al.r ha-icon{color:#fb7185}.al.a{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.28)}.al.a ha-icon{color:#fbbf24}
+    tap_action:
+      action: none
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    triggers_update:
+    - sensor.TU_EQUIPO_rssi
+    - sensor.TU_EQUIPO_wifi
+    - sensor.TU_EQUIPO_ip
+    - sensor.TU_EQUIPO_uptime
+    - sensor.TU_EQUIPO_memoria
+    - sensor.TU_EQUIPO_firmware
+    custom_fields:
+      body: |-
+        [[[
+         const g = k => states['sensor.TU_EQUIPO_' + k]?.state;
+         const rssi = parseInt(g('rssi') || -100);
+         const nb = rssi >= -55 ? 4 : rssi >= -65 ? 3 : rssi >= -75 ? 2 : rssi >= -85 ? 1 : 0;
+         const bars = [1,2,3,4].map(i => '<i class="'+(i <= nb ? 'on' : '')+'" style="height:'+(i*4+2)+'px"></i>').join('');
+         const up = parseInt(g('uptime') || 0);
+         const d = Math.floor(up/86400), hh = Math.floor(up%86400/3600), mm = Math.floor(up%3600/60);
+         const upt = d ? d + ' d ' + hh + ' h' : (hh ? hh + ' h ' + mm + ' min' : mm + ' min');
+         const fila = (k, v) => '<div class="row li"><span class="mut">'+k+'</span><span>'+v+'</span></div>';
+         return '<div class="row"><div class="eb">Equipo</div><span class="fw">v' + (g('firmware') || '?') + '</span></div>'
+          + '<div class="wifi"><div class="bars">'+bars+'</div><div><div class="t">'+(g('wifi') || '—')+'</div><div class="s">'+rssi+' dBm · '+(g('ip') || '')+'</div></div></div>'
+          + fila('Encendido', upt) + fila('Memoria libre', (g('memoria') || '?') + ' KB');
+        ]]]
+    styles:
+      card:
+      - padding: 20px 22px
+      - border-radius: 22px
+      - box-sizing: border-box
+      - overflow: hidden
+      - background: linear-gradient(160deg, rgba(30,41,59,.72), rgba(15,23,42,.62))
+      - border: 1px solid rgba(148,163,184,.16)
+      - box-shadow: 0 10px 30px rgba(2,6,23,.35)
+      - backdrop-filter: blur(14px)
+      - -webkit-backdrop-filter: blur(14px)
+      grid:
+      - grid-template-areas: '"body"'
+      - grid-template-columns: 1fr
+      custom_fields:
+        body:
+        - width: 100%
+        - align-self: stretch
+        - justify-self: stretch
+        - text-align: left
+    extra_styles: .eb{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}.mut{color:#94a3b8}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.fw{font-size:11px;font-weight:800;color:#5eead4;background:rgba(45,212,191,.12);padding:3px 9px;border-radius:999px}.wifi{display:flex;align-items:center;gap:14px;margin:14px 0 6px}.bars{display:flex;align-items:flex-end;gap:3px;height:20px}.bars i{width:5px;border-radius:2px;background:rgba(148,163,184,.22)}.bars i.on{background:#38bdf8}.t{font-size:15px;font-weight:800;color:#f1f5f9}.s{font-size:12px;color:#94a3b8;margin-top:2px}.li{font-size:12px;color:#e2e8f0;padding:9px 0;border-top:1px solid rgba(148,163,184,.10)}
+    tap_action:
+      action: none
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style: ':host { --grid-card-gap: 0px !important; } #root { gap: 0 !important; column-gap: 0 !important; } ha-card { background: transparent; box-shadow: none; border: 0;  }'
+    cards:
+    - type: custom:button-card
+      entity: button.TU_EQUIPO_buscar_actualizacion
+      name: Buscar
+      icon: mdi:cloud-search-outline
+      show_state: false
+      show_label: true
+      size: 20px
+      label: actualización
+      triggers_update: []
+      tap_action:
+        action: call-service
+        service: button.press
+        target:
+          entity_id: button.TU_EQUIPO_buscar_actualizacion
+      styles:
+        card:
+        - height: 64px
+        - padding: 8px 6px
+        - border-radius: 14px 0 0 14px
+        - background: rgba(15,23,42,.55)
+        - box-shadow: none
+        - border: 1px solid rgba(255,255,255,.10)
+        grid:
+        - grid-template-areas: '"i" "n" "l"'
+        - grid-template-rows: 24px 1fr 1fr
+        icon:
+        - width: 20px
+        - color: '#38bdf8'
+        name:
+        - font-size: 12px
+        - font-weight: '800'
+        - color: '#f1f5f9'
+        label:
+        - font-size: 10px
+        - color: '#94a3b8'
+        - white-space: nowrap
+        - overflow: hidden
+        - text-overflow: ellipsis
+      card_mod:
+        style: 'ha-card { border-radius: 14px 0 0 14px !important; }'
+    - type: custom:button-card
+      entity: button.TU_EQUIPO_instalar_actualizacion
+      name: Actualizar
+      icon: mdi:download
+      show_state: false
+      show_label: true
+      size: 20px
+      label: firmware
+      triggers_update: []
+      tap_action:
+        action: call-service
+        service: button.press
+        target:
+          entity_id: button.TU_EQUIPO_instalar_actualizacion
+        confirmation:
+          text: ¿Instalar la actualización? El pastillero se reiniciará.
+      styles:
+        card:
+        - height: 64px
+        - padding: 8px 6px
+        - border-radius: 0 14px 14px 0
+        - background: rgba(15,23,42,.55)
+        - box-shadow: none
+        - border: 1px solid rgba(255,255,255,.10)
+        - border-left: 1px solid rgba(255,255,255,.06)
+        grid:
+        - grid-template-areas: '"i" "n" "l"'
+        - grid-template-rows: 24px 1fr 1fr
+        icon:
+        - width: 20px
+        - color: '#fbbf24'
+        name:
+        - font-size: 12px
+        - font-weight: '800'
+        - color: '#f1f5f9'
+        label:
+        - font-size: 10px
+        - color: '#94a3b8'
+        - white-space: nowrap
+        - overflow: hidden
+        - text-overflow: ellipsis
+      card_mod:
+        style: 'ha-card { border-radius: 0 14px 14px 0 !important; }'
+  - type: grid
+    columns: 3
+    square: false
+    card_mod:
+      style: ':host { --grid-card-gap: 0px !important; } #root { gap: 0 !important; column-gap: 0 !important; } ha-card { background: transparent; box-shadow: none; border: 0;  }'
+    cards:
+    - type: custom:button-card
+      entity: button.TU_EQUIPO_pedir_adelantar_la_proxima_toma
+      name: Pedir
+      icon: mdi:clock-fast
+      show_state: false
+      show_label: true
+      size: 20px
+      label: '[[[ const a = states[''sensor.TU_EQUIPO_adelanto_de_toma'']?.attributes || {}; return a.proxima_adelantable || ''—''; ]]]'
+      triggers_update:
+      - sensor.TU_EQUIPO_adelanto_de_toma
+      tap_action:
+        action: call-service
+        service: button.press
+        target:
+          entity_id: button.TU_EQUIPO_pedir_adelantar_la_proxima_toma
+      styles:
+        card:
+        - height: 64px
+        - padding: 8px 6px
+        - border-radius: 14px 0 0 14px
+        - background: rgba(15,23,42,.55)
+        - box-shadow: none
+        - border: 1px solid rgba(255,255,255,.10)
+        grid:
+        - grid-template-areas: '"i" "n" "l"'
+        - grid-template-rows: 24px 1fr 1fr
+        icon:
+        - width: 20px
+        - color: '#38bdf8'
+        name:
+        - font-size: 12px
+        - font-weight: '800'
+        - color: '#f1f5f9'
+        label:
+        - font-size: 10px
+        - color: '#94a3b8'
+        - white-space: nowrap
+        - overflow: hidden
+        - text-overflow: ellipsis
+      card_mod:
+        style: 'ha-card { border-radius: 14px 0 0 14px !important; }'
+    - type: custom:button-card
+      entity: button.TU_EQUIPO_confirmar_adelanto_de_toma
+      name: Confirmar
+      icon: mdi:check-bold
+      show_state: false
+      show_label: true
+      size: 20px
+      label: '[[[ const a = states[''sensor.TU_EQUIPO_adelanto_de_toma'']?.attributes || {}; return a.pendiente || ''—''; ]]]'
+      triggers_update:
+      - sensor.TU_EQUIPO_adelanto_de_toma
+      tap_action:
+        action: call-service
+        service: button.press
+        target:
+          entity_id: button.TU_EQUIPO_confirmar_adelanto_de_toma
+        confirmation:
+          text: ¿Dispensar ahora la próxima toma? Quedará marcada como dada.
+      styles:
+        card:
+        - height: 64px
+        - padding: 8px 6px
+        - border-radius: '0'
+        - background: rgba(15,23,42,.55)
+        - box-shadow: none
+        - border: 1px solid rgba(255,255,255,.10)
+        - border-left: 1px solid rgba(255,255,255,.06)
+        grid:
+        - grid-template-areas: '"i" "n" "l"'
+        - grid-template-rows: 24px 1fr 1fr
+        icon:
+        - width: 20px
+        - color: '#4ade80'
+        name:
+        - font-size: 12px
+        - font-weight: '800'
+        - color: '#f1f5f9'
+        label:
+        - font-size: 10px
+        - color: '#94a3b8'
+        - white-space: nowrap
+        - overflow: hidden
+        - text-overflow: ellipsis
+      card_mod:
+        style: 'ha-card { border-radius: 0 !important; }'
+    - type: custom:button-card
+      entity: button.TU_EQUIPO_cancelar_adelanto_de_toma
+      name: Cancelar
+      icon: mdi:close-thick
+      show_state: false
+      show_label: true
+      size: 20px
+      label: '[[[ const a = states[''sensor.TU_EQUIPO_adelanto_de_toma'']?.attributes || {}; return a.pendiente ? ''Anular'' : ''—''; ]]]'
+      triggers_update:
+      - sensor.TU_EQUIPO_adelanto_de_toma
+      tap_action:
+        action: call-service
+        service: button.press
+        target:
+          entity_id: button.TU_EQUIPO_cancelar_adelanto_de_toma
+      styles:
+        card:
+        - height: 64px
+        - padding: 8px 6px
+        - border-radius: 0 14px 14px 0
+        - background: rgba(15,23,42,.55)
+        - box-shadow: none
+        - border: 1px solid rgba(255,255,255,.10)
+        - border-left: 1px solid rgba(255,255,255,.06)
+        grid:
+        - grid-template-areas: '"i" "n" "l"'
+        - grid-template-rows: 24px 1fr 1fr
+        icon:
+        - width: 20px
+        - color: '#fb7185'
+        name:
+        - font-size: 12px
+        - font-weight: '800'
+        - color: '#f1f5f9'
+        label:
+        - font-size: 10px
+        - color: '#94a3b8'
+        - white-space: nowrap
+        - overflow: hidden
+        - text-overflow: ellipsis
+      card_mod:
+        style: 'ha-card { border-radius: 0 14px 14px 0 !important; }'
